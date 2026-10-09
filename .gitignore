@@ -1,0 +1,40 @@
+# 凭证与本地配置：绝不入库（见 CONTEST_DECLARATION.md 信息安全声明）
+.env
+.env.*
+*.local.json
+mcp-config.json
+mcp-config.local.json
+*token*
+*secret*
+*credential*
+
+# 从 MCP 实时拉取的原始数据默认不入库——拉取动作带个人 Token，产物可能夹带账户上下文。
+# 例外：samples/nutrition-foods.raw.json 已逐字段人工核验，信封仅含
+# success/code/message/datetime/traceId/data 六个键，data 是纯静态营养表，
+# 无凭证、无个人信息，因此显式放行，让评审可以零 Token 复现真实结果。
+# 新增任何 *.raw.json 前请重复该核验流程。
+samples/*.raw.json
+samples/*.txt
+samples/*.log
+samples/*.har
+!samples/nutrition-foods.raw.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+build/
+dist/
+
+# 生成的报告产物默认不入库（避免过期快照误导），docs/ 下的示例除外
+/*.html
+/*.csv
+!docs/
+
+# 编辑器与系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

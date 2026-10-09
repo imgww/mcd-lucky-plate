@@ -1,0 +1,380 @@
+{
+  "schema_version": "1",
+  "capabilities": [
+    "lucky_theme_projection",
+    "homophone_anchor_resolution",
+    "nutrition_constraint_solving",
+    "single_meal_composition",
+    "theme_divergence_report",
+    "order_pathway_guidance",
+    "environment_readiness_routing",
+    "offline_sample_replay"
+  ],
+  "functional_degradations": [
+    {
+      "capability": "homophone_anchor_resolution",
+      "trigger": "主题的某个谐音锚点在真实菜单中无匹配餐品（如词库写了「扭蛋」但菜单没有该品名）",
+      "fallback": "如实报告该锚点未命中，不退回模糊匹配、不编造餐品；未命中锚点不参与任何餐单",
+      "user_input": "在 --anchors 输出与餐单中显式标注未命中锚点",
+      "limitations": "未命中锚点对应的心愿在该主题下无法体现；梗的覆盖受真实菜单约束",
+      "evidence_label": "已验证",
+      "recovery": "在 src/lucky.py 把失效锚点改为真实在售品名后复跑 --anchors",
+      "stop_condition": "全部锚点均未命中时返回无解并给出诊断，不生成无梗餐单"
+    },
+    {
+      "capability": "nutrition_constraint_solving",
+      "trigger": "MCP Token 未设置、认证失效或 mcp.mcd.cn 不可达",
+      "fallback": "改用仓库内 samples/nutrition-foods.raw.json 离线求解，算法与约束完全一致",
+      "user_input": "提示当前为离线数据快照并继续执行",
+      "limitations": "营养数据为 2026-10-09 实测快照，菜单可能已更新；不反映实时在售状态与价格",
+      "evidence_label": "已验证",
+      "recovery": "按 references/setup-guide.md 配置 MCD_MCP_TOKEN 后重跑在线模式",
+      "stop_condition": "样本文件缺失或归一化后 0 项时停止，退出码 3，并打印真实键名供校准"
+    },
+    {
+      "capability": "single_meal_composition",
+      "trigger": "主题约束在真实菜单上无解（如高蛋白主食主题必然高钠）",
+      "fallback": "按 RELAX_STEPS 逐级放宽谐音下限、热量容差与钠上限，取第一个有解档位",
+      "user_input": "输出中显示已放宽的具体档位，不额外询问",
+      "limitations": "放宽后的结果不再严格满足原始约束，差异会显式打印",
+      "evidence_label": "已验证",
+      "recovery": "按输出建议提高 --kcal、降低 --max-sodium 或放宽 --tolerance",
+      "stop_condition": "全部放宽档位仍无解时输出诊断建议并以退出码 1 结束，不生成假方案"
+    },
+    {
+      "capability": "lucky_theme_projection",
+      "trigger": "用户指定了 8 个已定义主题之外的心愿，或用户用 --min-hits 设定了显式谐音下限",
+      "fallback": "按最近邻映射到最接近的已知主题并声明映射关系；显式下限视为硬约束，不参与自动放宽",
+      "user_input": "告知映射到了哪个主题及依据，允许其改用 --kcal/--max-sodium 直接指定约束",
+      "limitations": "映射为近似，不保证完全贴合用户预期；显式下限不可达时如实返回无解而非降级满足",
+      "evidence_label": "已验证",
+      "recovery": "在 src/lucky.py 补充新主题定义或调整 min_hits 后复跑",
+      "stop_condition": "显式 --min-hits 超过当前主题可得锚点数时直接返回无解，不擅自降级"
+    },
+    {
+      "capability": "theme_divergence_report",
+      "trigger": "不同主题收敛到相同首选组合（词库共用锚点过多或约束未生效）",
+      "fallback": "如实报告收敛数量与原因，不修改权重制造差异",
+      "user_input": "在 --compare 输出中直接呈现不同首选方案数与差异化是否成立",
+      "limitations": "主题数不保证产出同等数量的不同答案，真实数据下需以实测为准",
+      "evidence_label": "已验证",
+      "recovery": "在 src/lucky.py 调整主题锚点或约束后复跑 --compare 观察变化",
+      "stop_condition": "若差异化不成立，compare_themes 直接报出 diverged=False"
+    },
+    {
+      "capability": "order_pathway_guidance",
+      "trigger": "用户希望把餐单变成真实订单",
+      "fallback": "输出四步链路与参数规则（query-nearby-stores → query-meals → calculate-price → create-order），不代为执行",
+      "user_input": "明确告知需用户本人确认后执行，且本 Skill 不产生订单",
+      "limitations": "无法校验门店实时在售状态与价格；营养表不含 productCode，需下单前现查",
+      "evidence_label": "已验证",
+      "recovery": "在 MCP 客户端中按 --order-help 输出的链路逐步执行",
+      "stop_condition": "无可靠降级时停止并说明原因，不用假编码或假价格顶替真实结果"
+    },
+    {
+      "capability": "offline_sample_replay",
+      "trigger": "运行时 samples/nutrition-foods.raw.json 不存在",
+      "fallback": "自动改用 tests/fixtures/ 合成夹具运行核心逻辑断言",
+      "user_input": "汇总区打印跳过数量与补样本指引",
+      "limitations": "依赖真实菜单的断言被标记为跳过，不计入通过数",
+      "evidence_label": "已验证",
+      "recovery": "重新拉取样本并先脱敏后入库",
+      "stop_condition": "合成夹具也不可用时以退出码 1 结束，不静默跳过全部断言"
+    },
+    {
+      "capability": "environment_readiness_routing",
+      "trigger": "执行前不确定环境是否具备运行条件",
+      "fallback": "返回 ready / partial / needs_setup / unavailable 四态并给出对应下一步",
+      "user_input": "只展示当前请求缺失的必需项，不输出凭据值",
+      "limitations": "网络探测只做 TCP 连通性验证，不保证业务接口一定可用",
+      "evidence_label": "已验证",
+      "recovery": "按状态对应的指引配置后重跑本检查",
+      "stop_condition": "环境为 needs_setup 或 unavailable 且无可用降级时停止受影响流程"
+    }
+  ],
+  "dependencies": [
+    {
+      "id": "python-runtime",
+      "type": "runtime",
+      "required": true,
+      "auth_type": "none",
+      "capabilities": [
+        "lucky_theme_projection",
+        "homophone_anchor_resolution",
+        "nutrition_constraint_solving",
+        "single_meal_composition",
+        "theme_divergence_report",
+        "offline_sample_replay"
+      ],
+      "checks": [
+        {
+          "id": "python-version",
+          "type": "python",
+          "required": true,
+          "command": "python",
+          "min_version": "3.10",
+          "field": "version_info"
+        }
+      ],
+      "setup": {
+        "official_home_url": "https://www.python.org/downloads/",
+        "official_docs_url": "https://docs.python.org/3/",
+        "download_url": "https://www.python.org/downloads/",
+        "steps": [
+          "安装 Python 3.10 或更高版本",
+          "本 Skill 零第三方依赖，无需 pip install",
+          "验证：python --version"
+        ],
+        "credential_storage": "不涉及凭据",
+        "verify": "python --version 输出 3.10 或更高",
+        "rotate_or_revoke": "不涉及",
+        "security": "仅使用标准库，不引入任何第三方包，避免供应链风险；不使用 eval/exec，不执行下载来的远程代码",
+        "verified_at": "2026-10-09",
+        "applies_to_version": "1.0.0"
+      },
+      "degradation": [
+        {
+          "capability": "nutrition_constraint_solving",
+          "trigger": "Python 低于 3.10，`X | None` 联合类型注解无法解析",
+          "fallback": "改用 typing.Optional 写法，需手工替换源码中的联合类型注解",
+          "user_input": "提示最低版本要求与替换方案，不自动改写源码",
+          "limitations": "手工替换后需重跑全部测试确认无回归",
+          "evidence_label": "推断",
+          "recovery": "升级 Python 至 3.10 及以上",
+          "stop_condition": "无法升级且不手工改写时停止，不使用可能行为不明的解释器继续"
+        },
+        {
+          "capability": "homophone_anchor_resolution",
+          "trigger": "Python 低于 3.10",
+          "fallback": "同 nutrition_constraint_solving 的降级路径",
+          "user_input": "同上",
+          "limitations": "同上",
+          "evidence_label": "推断",
+          "recovery": "升级 Python",
+          "stop_condition": "同上"
+        },
+        {
+          "capability": "single_meal_composition",
+          "trigger": "Python 低于 3.10",
+          "fallback": "同上",
+          "user_input": "同上",
+          "limitations": "同上",
+          "evidence_label": "推断",
+          "recovery": "升级 Python",
+          "stop_condition": "同上"
+        },
+        {
+          "capability": "theme_divergence_report",
+          "trigger": "Python 低于 3.10",
+          "fallback": "同上",
+          "user_input": "同上",
+          "limitations": "同上",
+          "evidence_label": "推断",
+          "recovery": "升级 Python",
+          "stop_condition": "同上"
+        },
+        {
+          "capability": "lucky_theme_projection",
+          "trigger": "Python 低于 3.10",
+          "fallback": "同上",
+          "user_input": "同上",
+          "limitations": "同上",
+          "evidence_label": "推断",
+          "recovery": "升级 Python",
+          "stop_condition": "同上"
+        },
+        {
+          "capability": "offline_sample_replay",
+          "trigger": "Python 低于 3.10",
+          "fallback": "同上",
+          "user_input": "同上",
+          "limitations": "同上",
+          "evidence_label": "推断",
+          "recovery": "升级 Python",
+          "stop_condition": "同上"
+        }
+      ]
+    },
+    {
+      "id": "mcd-mcp",
+      "type": "mcp",
+      "required": false,
+      "auth_type": "token",
+      "capabilities": [
+        "nutrition_constraint_solving",
+        "single_meal_composition",
+        "homophone_anchor_resolution",
+        "order_pathway_guidance"
+      ],
+      "checks": [
+        {
+          "id": "mcp-registered",
+          "type": "mcp",
+          "required": true,
+          "server": "mcd-mcp",
+          "url": "https://mcp.mcd.cn"
+        },
+        {
+          "id": "mcp-capability-probe",
+          "type": "mcp_probe",
+          "required": true,
+          "server": "mcd-mcp",
+          "target": "list-nutrition-foods",
+          "url": "https://mcp.mcd.cn"
+        },
+        {
+          "id": "token-auth-probe",
+          "type": "auth_probe",
+          "required": true,
+          "server": "mcd-mcp",
+          "target": "https://mcp.mcd.cn",
+          "url": "https://mcp.mcd.cn"
+        },
+        {
+          "id": "token-env-present",
+          "type": "env",
+          "required": true,
+          "field": "MCD_MCP_TOKEN"
+        }
+      ],
+      "setup": {
+        "official_home_url": "https://open.mcd.cn/mcp",
+        "official_docs_url": "https://github.com/M-China/mcd-mcp-server",
+        "login_url": "https://open.mcd.cn/mcp",
+        "credential_url": "https://open.mcd.cn/mcp",
+        "console_path": [
+          "控制台",
+          "激活",
+          "同意服务协议",
+          "复制 Token"
+        ],
+        "scopes": [
+          "list-nutrition-foods（唯一实际调用的只读工具）"
+        ],
+        "credential_storage": "仅存于环境变量 MCD_MCP_TOKEN；绝不写入源码、日志、异常信息或任何提交文件；.gitignore 已拦截 .env / *token* / *secret* / mcp-config.json",
+        "steps": [
+          "在 https://open.mcd.cn/mcp 点击右上角「登录」，用手机号验证",
+          "登录成功后右上角变为「控制台」，点击打开控制台弹窗",
+          "点击「激活」申请 MCP Token，阅读并同意服务协议",
+          "复制 Token 后仅设置为环境变量 MCD_MCP_TOKEN",
+          "验证：python src/lucky_plate.py --list-tools 应列出 35 个工具"
+        ],
+        "verify": "python src/lucky_plate.py --list-tools 输出工具总数 35；或 python scripts/check_environment.py 状态不为 needs_setup",
+        "rotate_or_revoke": "重新激活即可获得新 Token，旧 Token 失效；本地删除环境变量即可停止使用",
+        "security": "本 Skill 只调用 list-nutrition-foods，刻意不接入 create-order、auto-bind-coupons、draw-lottery 等写操作工具，也不接入 query-my-* 个人资产查询；下单链路仅输出指引由用户确认后执行；异常信息经 mask_secret 兜底脱敏",
+        "verified_at": "2026-10-09",
+        "applies_to_version": "1.0.0"
+      },
+      "degradation": [
+        {
+          "capability": "nutrition_constraint_solving",
+          "trigger": "MCD_MCP_TOKEN 未设置、认证失效或 mcp.mcd.cn 不可达",
+          "fallback": "改用 samples/nutrition-foods.raw.json 离线求解，算法与约束完全一致",
+          "user_input": "提示当前为离线数据并继续执行",
+          "limitations": "营养数据为 2026-10-09 实测快照，菜单可能已更新；不反映实时在售状态",
+          "evidence_label": "已验证",
+          "recovery": "按 references/setup-guide.md 配置 MCD_MCP_TOKEN 后重跑在线模式",
+          "stop_condition": "样本也缺失时以退出码 3 停止并打印真实键名供校准"
+        },
+        {
+          "capability": "homophone_anchor_resolution",
+          "trigger": "MCD_MCP_TOKEN 未设置或服务不可达",
+          "fallback": "同上，改用离线样本核验锚点命中",
+          "user_input": "同上",
+          "limitations": "菜单可能已更新，部分锚点命中情况可能与线上不同",
+          "evidence_label": "已验证",
+          "recovery": "配置 Token 后重跑 --anchors",
+          "stop_condition": "样本缺失时停止，不猜测锚点命中情况"
+        },
+        {
+          "capability": "order_pathway_guidance",
+          "trigger": "MCD_MCP_TOKEN 未设置或服务不可达",
+          "fallback": "仍可输出四步链路与参数规则（该指引来自工具 schema，不依赖实时数据）",
+          "user_input": "说明无法校验实时在售与价格",
+          "limitations": "不反映门店实时状态与价格；productCode 无法预取",
+          "evidence_label": "已验证",
+          "recovery": "配置 Token 后在 MCP 客户端中执行链路",
+          "stop_condition": "无"
+        }
+      ]
+    },
+    {
+      "id": "nutrition-sample",
+      "type": "local-tool",
+      "required": true,
+      "auth_type": "none",
+      "capabilities": [
+        "offline_sample_replay",
+        "theme_divergence_report",
+        "nutrition_constraint_solving",
+        "single_meal_composition",
+        "homophone_anchor_resolution"
+      ],
+      "checks": [
+        {
+          "id": "sample-file-exists",
+          "type": "file",
+          "required": true,
+          "name": "nutrition-foods.raw.json",
+          "path": "samples/nutrition-foods.raw.json"
+        },
+        {
+          "id": "sample-has-data",
+          "type": "json_field",
+          "required": true,
+          "name": "nutrition-foods.raw.json",
+          "path": "samples/nutrition-foods.raw.json",
+          "field": "data"
+        }
+      ],
+      "setup": {
+        "official_home_url": "https://open.mcd.cn/mcp",
+        "official_docs_url": "https://github.com/M-China/mcd-mcp-server",
+        "download_url": "https://open.mcd.cn/mcp",
+        "steps": [
+          "若缺失：配置 MCD_MCP_TOKEN 后运行 python src/lucky_plate.py --probe-dump samples/nutrition-foods.raw.json",
+          "入库前必须脱敏（traceId 等会话标识）",
+          "确认无 Token 与个人标识后再提交"
+        ],
+        "credential_storage": "样本已脱敏入库，不含任何凭据或个人标识",
+        "verify": "python -c \"import json;d=json.load(open('samples/nutrition-foods.raw.json',encoding='utf-8'));print(len(d['data'].splitlines()))\" 输出 161",
+        "rotate_or_revoke": "重新拉取并脱敏后替换旧文件",
+        "security": "样本仅含 list-nutrition-foods 的营养成分表，不含 productCode 与门店信息；.gitignore 默认拦截所有 *.raw.json，仅对本文件开白名单",
+        "verified_at": "2026-10-09",
+        "applies_to_version": "1.0.0"
+      },
+      "degradation": [
+        {
+          "capability": "offline_sample_replay",
+          "trigger": "samples/nutrition-foods.raw.json 缺失或为空",
+          "fallback": "测试自动改用 tests/fixtures/ 合成夹具运行核心逻辑断言",
+          "user_input": "汇总区打印跳过数量与补样本指引",
+          "limitations": "依赖真实菜单的断言被标记为跳过，不计入通过数",
+          "evidence_label": "已验证",
+          "recovery": "重新拉取样本并脱敏后入库",
+          "stop_condition": "合成夹具也不可用时以退出码 1 结束，不静默跳过全部断言"
+        },
+        {
+          "capability": "theme_divergence_report",
+          "trigger": "真实样本缺失",
+          "fallback": "改用合成夹具计算差异化，结论仅在该夹具下成立",
+          "user_input": "输出中标注数据来源为合成夹具，不冒充真实菜单结论",
+          "limitations": "合成夹具的品类结构与真实菜单不同，差异化数字不可直接外推",
+          "evidence_label": "已验证",
+          "recovery": "补齐真实样本后复跑",
+          "stop_condition": "无任何数据时停止报告差异化"
+        },
+        {
+          "capability": "homophone_anchor_resolution",
+          "trigger": "真实样本缺失且未配置 Token",
+          "fallback": "使用合成夹具求解，但锚点命中结论必须标注为仅在夹具下成立",
+          "user_input": "明确标注数据来源为合成数据",
+          "limitations": "夹具餐品为人为构造，锚点命中情况不代表真实菜单",
+          "evidence_label": "已验证",
+          "recovery": "补齐样本或配置 Token",
+          "stop_condition": "两者都不可用时停止，不编造锚点命中结果"
+        }
+      ]
+    }
+  ]
+}
