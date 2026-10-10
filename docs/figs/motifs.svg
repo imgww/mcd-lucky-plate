@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="400" viewBox="0 0 960 400" role="img" aria-labelledby="t d">
+<title id="t">餐品幸运清单</title>
+<desc id="d">154 项餐品全收录，共 215 条寓意</desc>
+<rect width="960" height="400" fill="#F7F4EC"/>
+<text x="48" y="42" font-size="19" fill="#241F1A" font-weight="500" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">餐品幸运清单：先穷举全部餐品，再由主题挑选</text>
+<text x="48" y="64" font-size="12" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">早期版本只有主题词库，导致未被任何主题用到的餐品没有寓意——清单把方向反过来</text>
+<rect x="48" y="94" width="250" height="150" rx="12" fill="#FFFFFF" stroke="#D8D0C2"/>
+<text x="70" y="148" font-size="52" fill="#A8271F" font-weight="500" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">154</text>
+<text x="70" y="178" font-size="13" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">/ 154 项餐品</text>
+<text x="70" y="214" font-size="16" fill="#3F6B4A" font-weight="500" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">覆盖率 100%</text>
+<text x="70" y="234" font-size="12" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">无「无解」项</text>
+<rect x="330" y="94" width="130" height="150" rx="12" fill="#FFFFFF" stroke="#D8D0C2"/>
+<text x="395" y="158" font-size="34" fill="#241F1A" font-weight="500" text-anchor="middle" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">215</text>
+<text x="395" y="186" font-size="12" fill="#6B6259" font-weight="400" text-anchor="middle" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">条寓意</text>
+<rect x="480" y="94" width="130" height="150" rx="12" fill="#FFFFFF" stroke="#D8D0C2"/>
+<text x="545" y="158" font-size="34" fill="#241F1A" font-weight="500" text-anchor="middle" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">87</text>
+<text x="545" y="186" font-size="12" fill="#6B6259" font-weight="400" text-anchor="middle" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">种寓意标签</text>
+<rect x="630" y="94" width="130" height="150" rx="12" fill="#FFFFFF" stroke="#D8D0C2"/>
+<text x="695" y="158" font-size="34" fill="#241F1A" font-weight="500" text-anchor="middle" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">50</text>
+<text x="695" y="186" font-size="12" fill="#6B6259" font-weight="400" text-anchor="middle" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">条谐音锚点</text>
+<text x="48" y="288" font-size="15" fill="#241F1A" font-weight="500" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">寓意覆盖 Top 8</text>
+<rect x="110" y="308" width="220" height="11" rx="5.5" fill="#A8271F"/>
+<text x="48" y="318" font-size="12" fill="#241F1A" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">大吉大利</text>
+<text x="338" y="318" font-size="11" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">23 项</text>
+<rect x="550" y="308" width="172" height="11" rx="5.5" fill="#3F6B4A"/>
+<text x="488" y="318" font-size="12" fill="#241F1A" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">浓</text>
+<text x="778" y="318" font-size="11" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">18 项</text>
+<rect x="110" y="332" width="115" height="11" rx="5.5" fill="#8A6A3B"/>
+<text x="48" y="342" font-size="12" fill="#241F1A" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">铁</text>
+<text x="338" y="342" font-size="11" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">12 项</text>
+<rect x="550" y="332" width="86" height="11" rx="5.5" fill="#4A5B7C"/>
+<text x="488" y="342" font-size="12" fill="#241F1A" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">满分</text>
+<text x="778" y="342" font-size="11" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">9 项</text>
+<rect x="110" y="356" width="67" height="11" rx="5.5" fill="#7A4A62"/>
+<text x="48" y="366" font-size="12" fill="#241F1A" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">牛气冲天</text>
+<text x="338" y="366" font-size="11" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">7 项</text>
+<rect x="550" y="356" width="57" height="11" rx="5.5" fill="#556B2F"/>
+<text x="488" y="366" font-size="12" fill="#241F1A" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">出</text>
+<text x="778" y="366" font-size="11" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">6 项</text>
+<rect x="110" y="380" width="57" height="11" rx="5.5" fill="#8B5A2B"/>
+<text x="48" y="390" font-size="12" fill="#241F1A" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">美事</text>
+<text x="338" y="390" font-size="11" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">6 项</text>
+<rect x="550" y="380" width="57" height="11" rx="5.5" fill="#4F4A69"/>
+<text x="488" y="390" font-size="12" fill="#241F1A" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">遇</text>
+<text x="778" y="390" font-size="11" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">6 项</text>
+</svg>

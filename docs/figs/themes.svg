@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="480" viewBox="0 0 1080 480" role="img" aria-labelledby="t d">
+<title id="t">8 个幸运主题的餐单对比</title>
+<desc id="d">每个主题的实际热量、预算与谐音命中数</desc>
+<rect width="1080" height="480" fill="#F7F4EC"/>
+<text x="48" y="42" font-size="18" fill="#241F1A" font-weight="500" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">同一天 · 同一份菜单 · 8 个主题给出 8 种不同答案</text>
+<text x="48" y="63" font-size="12" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">全部严格档求解，无放宽。数值为实际求解结果，非示意</text>
+<line x1="190.0" y1="86" x2="190.0" y2="432" stroke="#D8D0C2" stroke-width="1"/>
+<text x="190.0" y="80" font-size="10" fill="#6B6259" font-weight="400" text-anchor="middle" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">0</text>
+<line x1="273.0" y1="86" x2="273.0" y2="432" stroke="#D8D0C2" stroke-width="1"/>
+<text x="273.0080315879212" y="80" font-size="10" fill="#6B6259" font-weight="400" text-anchor="middle" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">200</text>
+<line x1="356.0" y1="86" x2="356.0" y2="432" stroke="#D8D0C2" stroke-width="1"/>
+<text x="356.0160631758424" y="80" font-size="10" fill="#6B6259" font-weight="400" text-anchor="middle" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">400</text>
+<line x1="439.0" y1="86" x2="439.0" y2="432" stroke="#D8D0C2" stroke-width="1"/>
+<text x="439.0240947637636" y="80" font-size="10" fill="#6B6259" font-weight="400" text-anchor="middle" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">600</text>
+<line x1="522.0" y1="86" x2="522.0" y2="432" stroke="#D8D0C2" stroke-width="1"/>
+<text x="522.0321263516848" y="80" font-size="10" fill="#6B6259" font-weight="400" text-anchor="middle" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">800</text>
+<line x1="605.0" y1="86" x2="605.0" y2="432" stroke="#D8D0C2" stroke-width="1"/>
+<text x="605.040157939606" y="80" font-size="10" fill="#6B6259" font-weight="400" text-anchor="middle" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">1000</text>
+<line x1="513.7" y1="91.3" x2="513.7" y2="134.4" stroke="#241F1A" stroke-width="1.2"/>
+<rect x="190" y="104.1" width="362.7" height="17.5" rx="3" fill="#A8271F"/>
+<text x="178" y="112.875" font-size="13" fill="#241F1A" font-weight="500" text-anchor="end" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">一夜暴富</text>
+<text x="570" y="108.875" font-size="11" fill="#241F1A" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">874 kcal</text>
+<text x="570" y="121.875" font-size="10" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">谐音 4 · 2 个可选餐单</text>
+<text x="513.7313231928927" y="87.34" font-size="9" fill="#6B6259" font-weight="400" text-anchor="middle" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">预算780.0</text>
+<line x1="447.3" y1="133.1" x2="447.3" y2="176.2" stroke="#241F1A" stroke-width="1.2"/>
+<rect x="190" y="145.9" width="254.4" height="17.5" rx="3" fill="#3F6B4A"/>
+<text x="178" y="154.625" font-size="13" fill="#241F1A" font-weight="500" text-anchor="end" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">逢考必过</text>
+<text x="570" y="150.625" font-size="11" fill="#241F1A" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">613 kcal</text>
+<text x="570" y="163.625" font-size="10" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">谐音 4 · 3 个可选餐单</text>
+<text x="447.32489792255575" y="129.09" font-size="9" fill="#6B6259" font-weight="400" text-anchor="middle" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">预算620.0</text>
+<line x1="480.5" y1="174.8" x2="480.5" y2="217.9" stroke="#241F1A" stroke-width="1.2"/>
+<rect x="190" y="187.6" width="288.9" height="17.5" rx="3" fill="#8A6A3B"/>
+<text x="178" y="196.375" font-size="13" fill="#241F1A" font-weight="500" text-anchor="end" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">桃花运开</text>
+<text x="570" y="192.375" font-size="11" fill="#241F1A" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">696 kcal</text>
+<text x="570" y="205.375" font-size="10" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">谐音 4 · 3 个可选餐单</text>
+<text x="480.52811055772423" y="170.84" font-size="9" fill="#6B6259" font-weight="400" text-anchor="middle" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">预算700.0</text>
+<line x1="455.6" y1="216.6" x2="455.6" y2="259.7" stroke="#241F1A" stroke-width="1.2"/>
+<rect x="190" y="229.4" width="264.4" height="17.5" rx="3" fill="#4A5B7C"/>
+<text x="178" y="238.125" font-size="13" fill="#241F1A" font-weight="500" text-anchor="end" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">offer在手</text>
+<text x="570" y="234.125" font-size="11" fill="#241F1A" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">637 kcal</text>
+<text x="570" y="247.125" font-size="10" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">谐音 4 · 3 个可选餐单</text>
+<text x="455.62570108134787" y="212.59" font-size="9" fill="#6B6259" font-weight="400" text-anchor="middle" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">预算640.0</text>
+<line x1="405.8" y1="258.3" x2="405.8" y2="301.4" stroke="#241F1A" stroke-width="1.2"/>
+<rect x="190" y="271.1" width="222.9" height="17.5" rx="3" fill="#7A4A62"/>
+<text x="178" y="279.875" font-size="13" fill="#241F1A" font-weight="500" text-anchor="end" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">轻装上阵</text>
+<text x="570" y="275.875" font-size="11" fill="#241F1A" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">537 kcal</text>
+<text x="570" y="288.875" font-size="10" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">谐音 3 · 3 个可选餐单</text>
+<text x="405.82088212859514" y="254.33999999999997" font-size="9" fill="#6B6259" font-weight="400" text-anchor="middle" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">预算520.0</text>
+<line x1="472.2" y1="300.1" x2="472.2" y2="343.2" stroke="#241F1A" stroke-width="1.2"/>
+<rect x="190" y="312.9" width="282.6" height="17.5" rx="3" fill="#556B2F"/>
+<text x="178" y="321.625" font-size="13" fill="#241F1A" font-weight="500" text-anchor="end" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">满血复活</text>
+<text x="570" y="317.625" font-size="11" fill="#241F1A" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">681 kcal</text>
+<text x="570" y="330.625" font-size="10" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">谐音 4 · 3 个可选餐单</text>
+<text x="472.2273073989321" y="296.09" font-size="9" fill="#6B6259" font-weight="400" text-anchor="middle" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">预算680.0</text>
+<line x1="455.6" y1="341.8" x2="455.6" y2="384.9" stroke="#241F1A" stroke-width="1.2"/>
+<rect x="190" y="354.6" width="308.8" height="17.5" rx="3" fill="#8B5A2B"/>
+<text x="178" y="363.375" font-size="13" fill="#241F1A" font-weight="500" text-anchor="end" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">抽奖必中</text>
+<text x="570" y="359.375" font-size="11" fill="#241F1A" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">744 kcal</text>
+<text x="570" y="372.375" font-size="10" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">谐音 4 · 3 个可选餐单</text>
+<text x="455.62570108134787" y="337.84" font-size="9" fill="#6B6259" font-weight="400" text-anchor="middle" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">预算640.0</text>
+<line x1="488.8" y1="383.6" x2="488.8" y2="426.7" stroke="#241F1A" stroke-width="1.2"/>
+<rect x="190" y="396.4" width="298.0" height="17.5" rx="3" fill="#4F4A69"/>
+<text x="178" y="405.125" font-size="13" fill="#241F1A" font-weight="500" text-anchor="end" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">一路顺风</text>
+<text x="570" y="401.125" font-size="11" fill="#241F1A" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">718 kcal</text>
+<text x="570" y="414.125" font-size="10" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">谐音 3 · 3 个可选餐单</text>
+<text x="488.82891371651635" y="379.59" font-size="9" fill="#6B6259" font-weight="400" text-anchor="middle" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">预算720.0</text>
+<line x1="190" y1="432" x2="560" y2="432" stroke="#241F1A" stroke-width="1"/>
+<text x="48" y="460" font-size="11" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">条长= 实际配餐热量　竖线 = 主题预算（kcal）　右侧为该主题命中的谐音数与可选餐单数</text>
+</svg>

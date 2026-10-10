@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="250" viewBox="0 0 960 250" role="img" aria-labelledby="t d">
+<title id="t">从餐单到下单的四步链路</title>
+<desc id="d">本 Skill 停在品名级，不代下单</desc>
+<rect width="960" height="250" fill="#F7F4EC"/>
+<text x="48" y="44" font-size="19" fill="#241F1A" font-weight="500" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">从餐单到真实订单：四步链路</text>
+<text x="48" y="66" font-size="12" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">营养表不含 productCode，需确定门店后现查——这是餐单停在品名级的原因</text>
+<rect x="48" y="96" width="200" height="96" rx="10" fill="#FFFFFF" stroke="#A8271F" stroke-width="1.5"/>
+<text x="62" y="122" font-size="20" fill="#A8271F" font-weight="500" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">①</text>
+<text x="62" y="146" font-size="12" fill="#241F1A" font-weight="500" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">query-nearby-stores</text>
+<text x="62" y="166" font-size="11" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">选门店</text>
+<text x="62" y="181" font-size="11" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">拿 storeCode</text>
+<line x1="248" y1="144" x2="272" y2="144" stroke="#6B6259" stroke-width="1.5" marker-end="url(#ar)"/>
+<rect x="272" y="96" width="200" height="96" rx="10" fill="#FFFFFF" stroke="#A8271F" stroke-width="1.5"/>
+<text x="286" y="122" font-size="20" fill="#A8271F" font-weight="500" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">②</text>
+<text x="286" y="146" font-size="12" fill="#241F1A" font-weight="500" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">query-meals</text>
+<text x="286" y="166" font-size="11" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">拿 productCode</text>
+<text x="286" y="181" font-size="11" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">与价格</text>
+<line x1="472" y1="144" x2="496" y2="144" stroke="#6B6259" stroke-width="1.5" marker-end="url(#ar)"/>
+<rect x="496" y="96" width="200" height="96" rx="10" fill="#FFFFFF" stroke="#8A6A3B" stroke-width="1.5"/>
+<text x="510" y="122" font-size="20" fill="#8A6A3B" font-weight="500" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">③</text>
+<text x="510" y="146" font-size="12" fill="#241F1A" font-weight="500" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">calculate-price</text>
+<text x="510" y="166" font-size="11" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">试算总价</text>
+<text x="510" y="181" font-size="11" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">得 takeWayCode</text>
+<line x1="696" y1="144" x2="720" y2="144" stroke="#6B6259" stroke-width="1.5" marker-end="url(#ar)"/>
+<rect x="720" y="96" width="200" height="96" rx="10" fill="#FFFFFF" stroke="#3F6B4A" stroke-width="1.5"/>
+<text x="734" y="122" font-size="20" fill="#3F6B4A" font-weight="500" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">④</text>
+<text x="734" y="146" font-size="12" fill="#241F1A" font-weight="500" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">create-order</text>
+<text x="734" y="166" font-size="11" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">用户确认后</text>
+<text x="734" y="181" font-size="11" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">才下单</text>
+<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#6B6259" stroke-width="1.5"/></marker></defs>
+<text x="48" y="222" font-size="12" fill="#6B6259" font-weight="400" text-anchor="start" font-family="'Noto Sans CJK SC','Microsoft YaHei',sans-serif">本 Skill 只输出餐单与链路指引，不代下单；价格单位为分，下单前需 calculate-price 试算</text>
+</svg>

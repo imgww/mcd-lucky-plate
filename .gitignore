@@ -28,6 +28,9 @@ venv/
 build/
 dist/
 
+# 配图脚本的中间数据（可由 docs/make_figs.py 自动重算，不入库）
+docs/_figs_data.json
+
 # 生成的报告产物默认不入库（避免过期快照误导），docs/ 下的示例除外
 /*.html
 /*.csv

@@ -1,78 +1,94 @@
-# 麦门幸运餐盘 · mcd-lucky-plate
+<div align="center">
 
-> 给好运点单：**按「一夜暴富」「逢考必过」这类心愿，解出一餐谐音俱全的麦当劳搭配**，
-> 并告诉你怎么把它变成真实订单。
+![banner](docs/figs/banner.png)
 
-麦当劳程序员创意开发大赛（M-CODE）参赛作品 · 基于麦当劳 MCP `list-nutrition-foods`
+# 麦门幸运餐盘
 
-```
-════════════════════════════════════════════════════════════════════════════
-  麦门幸运餐盘    数据源 offline:nutrition-foods.raw.json    候选餐品 154 项
-  幸运主题 8 个    谐音单元 50 条    锚点命中 50/50（零编造）
-────────────────────────────────────────────────────────────────────────────
-  一夜暴富  874 kcal  谐音 4  钠 2078mg   双层原味板烧鸡腿麦满分 + 烟肉蛋麦满分
-                                       + 原味板烧鸡腿麦满分 + 浓缩咖啡
-         梗：双层→双赢  鸡腿→大吉大利  麦满分→满分  浓缩→浓缩财富
-────────────────────────────────────────────────────────────────────────────
-  逢考必过  613 kcal  谐音 4  钠 908mg    烟肉蛋麦满分 + 麦乐鸡5块
-                                       + 大杯玉米杯 + 小杯玉米杯
-         梗：麦满分→满分  麦乐鸡→大吉大利  玉米→遇  蛋→单
-════════════════════════════════════════════════════════════════════════════
-  饭后不洗碗，碗会自己变干净（大概）。
-════════════════════════════════════════════════════════════════════════════
-```
+**按心愿解出一餐谐音俱全的麦当劳搭配**
 
-上面是**真实输出**：餐品名与全部营养数值来自麦当劳 MCP `list-nutrition-foods`
-的实际响应（快照存于 `samples/nutrition-foods.raw.json`，已逐字段核验无凭证与个人信息），命令为：
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![依赖](https://img.shields.io/badge/依赖-零第三方-3F6B4A)](#安装)
+[![MCP](https://img.shields.io/badge/MCP-list--nutrition--foods-8A6A3B)](MCP_INTEGRATION.md)
 
-```bash
-python src/lucky_plate.py --theme 一夜暴富 --offline samples/nutrition-foods.raw.json
-```
+[快速开始](#快速开始) · [餐品幸运清单](#餐品幸运清单) · [下单链路](#从餐单到下单) · [诚实边界](#诚实边界) · [贡献](CONTRIBUTING.md)
 
-去掉 `--offline` 并配好 Token，即改为每次运行实时拉取。
+</div>
 
 ---
 
-## 一、这个 Skill 解决什么
+## 这是什么
 
-### 要解决的真实问题
-
-想给一顿饭附会点好彩头不难，难的是**让彩头落在真实存在的东西上**。
+你今天想讨个吉利——考试前、面试前、抽奖前、搬家前。
 
 市面上的「幸运餐单」几乎都是编的：查不到菜单、热量随口写、谐音牵强。
-本项目反过来做——**先锁定真实在售的 154 项麦当劳餐品，再在它们身上找谐音**：
+本项目**反过来做**：先锁定麦当劳 MCP 返回的 **154 项真实在售餐品**，
+再在这些菜名上找谐音。
 
-- 「鸡腿」「麦乐鸡」确实是在售餐品 → 所以「大吉大利」的谐音有实物支撑
-- 「麦满分」确实是品牌命名 → 所以「考试满分」的梗不是硬凑
-- 每个梗都能回答「它对应菜单上哪一道菜」，答不上来就不算梗
+- 「**麦满分**」确实是官方命名 → 所以「考试满分」的梗不是硬凑
+- 「**板烧鸡腿堡**」确实在售 → 所以「鸡→吉」的谐音有实物支撑
+- 每个梗都能回答「它对应菜单上哪一道菜」，**答不上来就不算梗**
 
-### 与同类玩法的区别
+| 154 | 215 | 50/50 |
+|---:|---:|---:|
+| 餐品**全部**收录寓意 | 条幸运寓意 | 谐音锚点命中 |
 
-| 维度 | 常见「幸运餐单」 | 本项目 |
-|---|---|---|
-| 餐品真实性 | 文案编造，可能早已下架 | 全部锚定 `list-nutrition-foods` 实际返回 |
-| 谐音可核验性 | 无法追溯 | `--anchors` 逐条核验 50/50 命中 |
-| 主题差异 | 换个名字换段文案 | 主题驱动**约束**：热量/钠/甜品开关都不同 |
-| 无解时 | 硬凑一个 | 逐级放宽并打印放宽了什么，全无解则如实报无解 |
-| 到下单 | 无 | 给出四步链路与参数陷阱，但不代你下单 |
+---
 
-### 一条技术主张
+## 快速开始
 
-**谐音不是文案层的事，必须落在约束层。**
+**零第三方依赖**，只需 Python 3.10+。**离线模式无需 Token、无需联网**：
 
-主题差异作用在四个位置，缺一层所有主题就会趋同成同一批「万金油」餐品——
-这是实测出来的，不是设计出来的：
+```bash
+git clone https://github.com/imgww/mcd-lucky-plate.git
+cd mcd-lucky-plate
 
-| # | 作用点 | 做法 | 缺了会怎样 |
-|---|---|---|---|
-| 1 | 锚点集合 | 每个主题带自己的 `wishes` | 所有主题推同一批通用餐品 |
-| 2 | 硬约束 | 每主题独立热量预算 / 容差 / 钠上限 | 主题间营养数字完全一致 |
-| 3 | 甜品开关 | 「轻装上阵」「offer在手」强制关闭甜品 | 严肃主题拿到甜品餐，叙事崩塌 |
-| 4 | 权重 | 打分里谐音命中占 0.46，最高权重 | 退化成纯营养推荐，梗变装饰 |
+# 看 8 个主题分别解出什么（无需 Token）
+python src/lucky_plate.py --compare --offline samples/nutrition-foods.raw.json
 
-实测：8 个主题在同一份菜单上产出 **8 种不同首选**，`--compare` 一屏可见。
+# 看「一夜暴富」主题的完整餐单
+python src/lucky_plate.py --theme 一夜暴富 --offline samples/nutrition-foods.raw.json
+```
 
-### 8 个主题
+真实输出：
+
+```text
+  【一夜暴富 · jackpot】今晚吃这一顿，明天对账
+  预算 780 kcal ±18%   钠上限 2106 mg   甜品放开
+  候选池 20 / 154 项（只含能命中谐音锚点的餐品）
+  谐音锚点 7 / 7 命中
+────────────────────────────────────────────────────────────────
+  餐单 1   谐音命中 4 个   874 kcal   55g 蛋白
+     · 双层原味板烧鸡腿麦满分  [主食]  355 kcal  钠 984 mg  ← 双层 / 鸡腿 / 麦满分
+     · 烟肉蛋麦满分            [主食]  260 kcal  钠 483 mg  ← 麦满分
+     · 原味板烧鸡腿麦满分      [主食]  246 kcal  钠 611 mg  ← 鸡腿 / 麦满分
+     · 浓缩咖啡                [饮品]   13 kcal  钠   0 mg  ← 浓缩
+     合计 874 kcal  蛋白 55.0 g  脂肪 36.0 g  碳水 78.0 g  钠 2078 mg
+       梗：双层 → 双赢、双份，寓意加倍进账
+       梗：鸡腿 → 「鸡」谐音「吉」，大吉大利；「利」字还额外应了暴富
+       梗：麦满分 → 考试满分；分数满则财源顺
+       梗：浓缩咖啡 → 「浓缩财富」，一天把本事熬浓
+
+  饭后不洗碗，碗会自己变干净（大概）。
+```
+
+需要实时数据时再配 Token：
+
+```bash
+export MCD_MCP_TOKEN="你的Token"        # Windows: $env:MCD_MCP_TOKEN="..."
+python src/lucky_plate.py --list-tools   # 应输出 35 个工具
+python src/lucky_plate.py --theme exam
+```
+
+完整配置见 [`references/setup-guide.md`](references/setup-guide.md)。
+
+---
+
+## 8 个幸运主题
+
+![themes](docs/figs/themes.png)
+
+**同一天、同一份菜单，8 个主题给出 8 种不同答案**——这是本 Skill 的核心主张。
+全部严格档求解，零放宽。
 
 | 主题 | key | 一句话 | 热量 | 甜品 |
 |---|---|---|---:|---|
@@ -85,34 +101,28 @@ python src/lucky_plate.py --theme 一夜暴富 --offline samples/nutrition-foods
 | 抽奖必中 | `win-lottery` | 不用抽奖，这份餐自己就是奖 | 640 | 开 |
 | 一路顺风 | `travel` | 出发前吃好，路上别堵 | 720 | 开（低权） |
 
-每个主题的约束取值与推导依据写在 `src/lucky.py` 的 `provenance` 字段里，可改后复跑对比。
+### 主题差异作用在四处
+
+缺一层，所有主题就会收敛成同一批「万金油」餐品——**这是实测出来的，不是设计出来的**：
+
+| # | 作用点 | 缺了会怎样 |
+|---|---|---|
+| 1 | 锚点集合 | 所有主题推同一批通用餐品 |
+| 2 | 硬约束（热量 / 钠 / 容差） | 主题间营养数字完全一致 |
+| 3 | 甜品开关 | 「面试」「轻装上阵」会拿到甜品餐，叙事崩塌 |
+| 4 | 打分权重（谐音占 0.46，最高） | 退化成纯营养推荐，梗变装饰 |
 
 ---
 
-## 二、餐品幸运清单
+## 餐品幸运清单
 
-### 为什么先做清单
+![motifs](docs/figs/motifs.png)
 
 早期版本只有「主题词库」——由主题定义关键词、再反查餐品。
-那个方向有个**结构性缺陷**：只有被某个主题用到的餐品才有寓意，
+那个方向有个**结构性缺陷**：只有被某个主题用到的约 50 项餐品才有寓意，
 其余一百多项白白浪费。用户问「我这杯燕麦奶有什么寓意」时答不上来。
 
-本清单把方向反过来：**先穷举全部餐品，为每项标注它能承载的寓意**，主题再从清单里挑。
-
-| | 主题词库（旧） | 餐品幸运清单（本节） |
-|---|---|---|
-| 覆盖 | 8 个主题用到的约 50 项 | 全部 **154 项**，覆盖率 100% |
-| 方向 | 主题 → 关键词 → 反查餐品 | 餐品 → 寓意 → 主题引用 |
-| 可查性 | 只能问「某主题吃什么」 | 能问「这道菜有什么寓意」「什么菜有大吉大利」 |
-| 可审计 | 寓意散落在主题里 | 寓意集中在一张表，可逐条复核 |
-
-### 清单规模
-
-- **154 项**餐品全部收录，覆盖率 100%，无「无解」项
-- **215 条**寓意，平均每道菜 1.4 条
-- **87 种**寓意标签，谐音类型分 `谐音` / `字面` / `官方` / `反向`
-
-### 怎么查
+本清单把方向反过来：**先穷举全部餐品逐项标注寓意，主题再从清单里挑**。
 
 ```bash
 # 看完整清单（按品类分组）
@@ -120,110 +130,68 @@ python src/lucky_plate.py --menu-luck --offline samples/nutrition-foods.raw.json
 
 # 反查某个寓意对应哪些餐品
 python src/lucky_plate.py --menu-luck 大吉大利 --offline samples/nutrition-foods.raw.json
-python src/lucky_plate.py --menu-luck 满分 --offline samples/nutrition-foods.raw.json
-python src/lucky_plate.py --menu-luck 牛气冲天 --offline samples/nutrition-foods.raw.json
+# → 23 项餐品
 ```
 
-### 契合度分级
-
-每条寓意带一个 `score`（0-3），**只用于排序与人工判断，不参与求解**：
-
-| 契合度 | 含义 | 例子 |
-|:-:|---|---|
-| 3 | 梗很硬，一听就成立 | 鸡腿 → 大吉大利；麦满分 → 满分 |
-| 2 | 成立，但需解释一句 | 奶铁 → 铁定；雪碧 → 学 |
-| 1 | 牵强，取意空间大 | 皮蛋 → 皮开得逞；草莓拉明顿 → 拉你 |
-
-牵强的梗被**保留并明确标注**，而不是删掉或伪装成硬梗——
-使用者可自行判断要不要取用。**主题词库只取契合度 ≥2 的梗**，避免污染输出。
-
-### 官方营销梗名（最可靠的素材）
-
-菜单里有三个品名是麦当劳官方自带的营销梗，谐音天然工整：
-
-| 品名 | 梗 | 说明 |
+| 类型 | 梗 | 落到哪道菜 |
 |---|---|---|
-| 牛气满满 | 牛气冲天 | 官方命名自带「牛气」，非本项目原创 |
-| 专“薯鱼”你 | 专薯鱼你 | 「薯鱼/属你」为极工整的谐音 |
-| “苹板”支撑Pro | 平安 | 「苹板/平板」双关，取「平安有支撑」 |
+| 谐音 | 鸡腿 → **大吉大利** | 板烧鸡腿堡（菜单中 5 项含「鸡腿」） |
+| 谐音 | 鳕鱼 → **学识深** | 双层深海鳕鱼堡 |
+| 谐音 | 多笋 → **多顺** | 酥酥多笋卷 |
+| 谐音 | 麦香鱼 → **年年有余** | 麦香鱼 |
+| 字面 | 吉士 → **吉利** | 吉士汉堡包 |
+| 官方 | 牛气满满 → **牛气冲天** | 牛气满满 |
+| 官方 | 专“薯鱼”你 → **专属于你** | 专“薯鱼”你 |
+| 官方 | “苹板”支撑Pro → **平安** | “苹板”支撑Pro |
 
-完整清单见 [`docs/餐品幸运清单.md`](docs/餐品幸运清单.md)，
-逐条数据见 [`docs/餐品幸运清单.csv`](docs/餐品幸运清单.csv)（Excel 双击不乱码）。
-重新生成：`python scripts/export_menu_luck.py`。
+> 菜单里有三个品名是麦当劳官方自带的营销梗，谐音天然工整、可靠性最高。
 
-### 清单与主题的关系
-
-清单是主题词库的**上位资产**：主题的 50 条 anchor 全部能在清单里查到对应寓意，
-这条一致性由测试断言锁死（`7.4 主题 anchor 必须在清单中有对应寓意`）。
-
-**新增主题时不必先想关键词**——先在清单里挑寓意，再据此定anchor。
+清单全文：[`docs/餐品幸运清单.md`](docs/餐品幸运清单.md) ·
+逐条数据：[`docs/餐品幸运清单.csv`](docs/餐品幸运清单.csv)
 
 ---
 
-## 三、谐音词库怎么用
+## 谐音锚点必须落在真实菜单上
 
-### 词条结构
+![anchors](docs/figs/anchors.png)
 
-```python
-Wish(anchor="鸡腿",
-     gloss="鸡腿 → 「鸡」谐音「吉」，大吉大利；「利」字还额外应了暴富",
-     kind="homophone",
-     note="取自真实在售品「板烧鸡腿堡/原味板烧鸡腿麦满分」")
-```
-
-- `anchor`：**必须在真实菜单品名里出现的子串**，检索键
-- `gloss`：怎么念、怎么解释（展示给用户）
-- `kind`：谐音类型——`homophone` 谐音改写 / `literal` 字面吉祥义 / `brand` 品牌自带梗 / `reverse` 反向取意
-- `note`：溯源说明，含「是否官方」「有无歧义」
-
-### 四类梗各一例
-
-| 类型 | 梗 | 为什么成立 |
-|---|---|---|
-| `homophone` | 鸡腿 → 大吉大利 | 「鸡」谐音「吉」，对应真实在售品「板烧鸡腿堡」 |
-| `literal` | 巨无霸 → 巨额 + 霸气 | 成语联想，字面即吉祥 |
-| `brand` | 麦满分 → 考试满分 | 官方命名自带「满分」语义 |
-| `reverse` | 浓缩咖啡 → 浓缩财富 | 反向取意，取「熬浓」意象 |
-
-### 逐条核验
+这是本 Skill 最硬的一条门禁：
 
 ```bash
 python src/lucky_plate.py --anchors --offline samples/nutrition-foods.raw.json
 ```
 
-输出每个锚点命中几项、对应哪道菜、梗的解释与溯源。**未命中的锚点会被显式标出**
-（当前 50/50 全部命中）。这是本 Skill 最硬的一条门禁：答不上「对应菜单上哪道菜」
-的词条不该留在词库里。
+逐条输出每个锚点命中几项、对应哪道菜、梗的解释与溯源，**未命中的会被显式标出**。
+
+**开发过程中确实抓到过 3 个失效锚点**——初版词库写了「鲈」「扭蛋」「开心」，
+菜单里根本没有。这是「编造餐品」的真实风险。现已改为精确子串匹配，
+不退回模糊匹配、不编造餐品名。
+
+同类问题还有**锚点过宽**：`鱼` 会命中营销梗名「专“薯鱼”你」，
+引擎一度把它当主菜推给用户——**测试全绿也发现不了，只有看实际输出才能发现**。
+现已收窄为 `麦香鱼`。
 
 ---
 
-## 四、从餐单到下单
+## 从餐单到下单
 
-这是本 Skill 与只读工具最大的差别：**它关心怎么把餐单变成真实订单**，
-但**它自己不产生订单**。
+![order](docs/figs/order.png)
+
+本 Skill 关心怎么把餐单变成订单，但**自己不产生订单**。
 
 ### 为什么停在品名级
 
-一个诚实的边界：`list-nutrition-foods` **不返回 `productCode`**，只有营养成分。
-`productCode` 只能由 `query-meals` 在**确定门店之后**取得，因此天然依赖
-`storeCode`（门店/地理位置）。若为了拿编码而接入门店链路，餐单就无法离线复现——
-任何人 clone 后配自己的 Token 都跑不通，那不是可复现的方案。
+| 事实 | 后果 |
+|---|---|
+| `list-nutrition-foods` 只返回营养成分，**不含 `productCode`** | 餐单只能到品名级 |
+| `productCode` 只能由 `query-meals` 取得，且**需先有 `storeCode`** | 拿编码必然引入门店依赖 |
 
-所以本 Skill 产出**品名级**方案，并显式标注 `needs_code_lookup: true`。
-
-### 四步下单链路
+若为拿编码而接入门店链路，餐单就无法离线复现——任何人 clone 后配自己的
+Token 都跑不通。因此本 Skill 产出**品名级**方案并标注 `needs_code_lookup`，
+同时给出完整链路指引：
 
 ```bash
 python src/lucky_plate.py --order-help      # 打印完整链路与参数规则
-```
-
-```
-1. query-nearby-stores   选门店，拿到 storeCode
-                         （beType=1 到店自取 / beType=5 得来速）
-2. query-meals           按 storeCode 拉该店在售餐品，取得 productCode 与价格
-3. calculate-price       用 productCode 试算总价
-                         （返回的 takeWayList[].code 才是下单要传的 takeWayCode）
-4. create-order          用户明确确认后再下单
 ```
 
 ### 参数陷阱（实测 schema 校准）
@@ -235,150 +203,87 @@ python src/lucky_plate.py --order-help      # 打印完整链路与参数规则
 | 麦乐送到家 | 2 | 2 | **必传** | `addressId` |
 | 企业团餐 | 2 | 6 | **必传** | `gmServiceCode` |
 
-- `storeCode` / `orderType` / `beType` 三者**任何场景都必填**
-- 价格字段单位是**分**，展示需 ÷100
-- 套餐子项走 `items[].roundList`，与单点不同
+- `storeCode` / `orderType` / `beType` **任何场景都必填**
+- **价格单位是分**，展示需 ÷100
+- `takeWayCode` 来自 `calculate-price` 的 `takeWayList[].code`，不是自己编
+- 套餐子项走 `items[].roundList`，与单点结构不同
 
-### 为什么不代下单
-
-`create-order` 会产生真实订单与支付链路。Skill 的价值主张是
-**「算清楚 + 说清楚怎么点」**，不是替用户花钱。任何一步都应停在用户确认前。
+详见 [`references/ordering-playbook.md`](references/ordering-playbook.md)。
 
 ---
 
-## 五、安装方法
-
-### 前置条件
-
-| 项 | 要求 |
-|---|---|
-| Python | 3.10 及以上（标准库即可，**无需 `pip install`**） |
-| 麦当劳 MCP Token | 仅联网模式必需。在 <https://open.mcd.cn/mcp> 登录 → 控制台 → 激活 → 复制 |
-| 网络 | 联网模式需可访问 `https://mcp.mcd.cn` |
-
-### 步骤
+## 命令一览
 
 ```bash
-# 1. 进入目录
-cd mcd-lucky-plate
+# 主题
+python src/lucky_plate.py --themes                      # 列出全部主题
+python src/lucky_plate.py --theme 一夜暴富                # 指定主题出餐单
+python src/lucky_plate.py --compare                      # 8 主题对比
+python src/lucky_plate.py --theme exam --json            # 机器可读输出
 
-# 2. 离线模式先跑通（无需 Token）
-python src/lucky_plate.py --theme 一夜暴富 --offline samples/nutrition-foods.raw.json
+# 清单与核验
+python src/lucky_plate.py --menu-luck                    # 餐品幸运清单
+python src/lucky_plate.py --menu-luck 大吉大利            # 反查某寓意
+python src/lucky_plate.py --anchors                      # 锚点逐条核验
 
-# 3. 需要联网时再配 Token（只走环境变量，不要写进任何文件）
-export MCD_MCP_TOKEN="你的Token"        # Windows PowerShell: $env:MCD_MCP_TOKEN="..."
+# 下单与自检
+python src/lucky_plate.py --order-help                   # 下单链路指引
+python src/lucky_plate.py --list-tools                   # MCP 连通自检
+python scripts/check_environment.py                      # 环境就绪检查
 
-# 4. 自检 + 联网运行
-python src/lucky_plate.py --list-tools
-python src/lucky_plate.py --theme exam
+# 重建产物
+python scripts/export_menu_luck.py# 重建清单文档
+python docs/make_figs.py                                 # 重建配图
+python tests/test_lucky.py                               # 2081 项断言
 ```
 
-可选：把 `mcp-config.example.json` 的 `mcpServers` 段粘贴进 MCP 客户端的自定义
-连接器配置，替换 `${MCD_MCP_TOKEN}` 后即可在对话中调用。
+加 `--offline samples/nutrition-foods.raw.json` 即为离线模式。
 
 ---
 
-## 六、使用示例
-
-```bash
-# 列出全部主题与谐音词库
-python src/lucky_plate.py --themes
-
-# 逐条核验谐音锚点在真实菜单里的命中情况（最重要的一条自查命令）
-python src/lucky_plate.py --anchors --offline samples/nutrition-foods.raw.json
-
-# 同一天不同主题给出不同答案（核心证明）
-python src/lucky_plate.py --compare --offline samples/nutrition-foods.raw.json
-
-# 指定主题出餐单
-python src/lucky_plate.py --theme 一夜暴富
-python src/lucky_plate.py --theme 逢考必过 --top 5
-
-# 机器可读输出（含谐音命中明细与下单提示）
-python src/lucky_plate.py --theme jackpot --json
-
-# 提高谐音门槛：至少命中 5 个梗
-python src/lucky_plate.py --theme jackpot --min-hits 5
-
-# 控制份量
-python src/lucky_plate.py --theme heal --min-size 3 --max-size 3
-
-# 打印下单链路
-python src/lucky_plate.py --order-help
-
-# 校准与自检
-python src/lucky_plate.py --list-tools
-python src/lucky_plate.py --theme exam --probe-dump samples/nutrition-foods.raw.json
-
-# 回归测试（561 项断言，离线，无需 Token 与网络）
-python tests/test_lucky.py
-```
-
-### 在 MCP 客户端里对话使用
-
-配置好连接器后可以直接说：
-
-> 今天想讨个吉利，帮我配一顿麦当劳，要「一夜暴富」那种
-
----
-
-## 七、诚实边界
+## 诚实边界
 
 工具不静默违背自己设的约束，也不用假数据顶替真实输出。
 
-### 1. 一夜暴富是钠最高的主题，这是数据决定的
+### 1. 谐音只是文案玩法，不承诺效果
 
-初版按通用线给到钠上限 1404mg，结果无解。用 `scripts/calibrate_jackpot.py`
-扫过 600–780 kcal 共 10 档预算，**无一能在严格钠线下解出**——原因是本主题的锚点
-（巨无霸/双层/牛气/板烧/麦满分）全部指向高蛋白主食，实测单品钠 728–1373mg，
-两件主食必然超钠。
+所有谐音与吉祥话是**文案玩法**，**不构成任何运势或效果承诺**。
+输出尾部固定打印该声明。
 
-处理方式：**显式把钠上限放宽到 2106mg 并写进 provenance**，而不是让引擎悄悄放宽
-或换个主题凑答案。诚实代价：一夜暴富的钠含量在本 Skill 里最高。想控钠请选「轻装上阵」。
+### 2. 一夜暴富是钠最高的主题，这是数据决定的
 
-### 2. 「轻装上阵」的参数也是校准出来的
+初版按通用线给到钠上限 1404mg，结果无解。写校准脚本扫过 600–780 kcal
+共 10 档预算，**无一能在严格钠线下解出**——该主题锚点全指向高蛋白主食，
+实测单品钠 728–1373mg，两件必然超钠。
 
-初版设 520±20% / 钠 780mg 时，真实菜单上只能配出 420 kcal 的组合（命中数被迫下调、
-热量贴在带下沿）。放宽到 520±22% / 钠 980mg 后才配出既清爽又贴预算的餐。
+处理方式：**显式放宽钠上限并写进 `provenance`**，而不是让引擎悄悄放宽。
+诚实代价：它是本 Skill 钠含量最高的主题。想控钠请选「轻装上阵」。
 
-### 3. 牛类梗挂在「牛气满满」上，不是牛堡
+```bash
+python scripts/calibrate_jackpot.py    # 可复现上述结论
+```
 
-实测 6 款牛堡的钠负荷为 121–205 mg/100kcal，与「一路顺风」的钠上限存在
-**结构性冲突**——用 `scripts/calibrate_travel.py` 可复现：在 1296mg 下，
-该主题严格档（3 梗）无解。因此牛类梗统一挂在低钠的「牛气满满」（495kcal/钠 764）
-上，梗文写作「牛气冲天」。
+### 3. 谐音锚点过宽会让营销梗名顶包
 
-同时把钠上限校准到 **1490mg**（1.15 倍），3 梗方案从 0 个增至 7 个，
-首选恢复为严格档。选放钠而非放宽热量容差，是因为行程中缺水、钠高会更渴。
+`鱼` 命中过「专“薯鱼”你」——**测试全绿也发现不了**。
+判断标准：梗说的是「牛堡」就不该让牛奶来顶，说的是「鱼」就不该让营销名来顶。
 
-诚实代价：牛气满满常出现在第 2、3 号餐单而非首选——这是打分如实工作的结果，
-没有靠改预算迁就。
+### 4. 你设定的谐音下限不会被自动放宽
 
-### 4. 谐音锚点必须收窄，避免营销梗名顶包
+`--min-hits 99` 会**如实返回无解**并告诉你当前菜单只命中几个梗，
+而不是一路降到 1 个、假装满足了要求。这条有回归断言锁死。
 
-`鱼` 这个 anchor 会命中「专"薯鱼"你」——一个营销梗名。引擎一度把它当作
-travel 主题的主菜推给用户。现已收窄为 `麦香鱼`（逢考必过、一路顺风两处同改）。
+### 5. 餐单不保证当前门店在售
 
-这条的价值不在梗好不好，而在**梗必须落在正经主食上**。
+营养表是「常见餐品」非全量菜单，不含区域限定品与门店专属品。
 
-### 5. 显式设定的谐音下限不会被自动放宽
+### 6. 不做医疗或营养建议
 
-若你用 `--min-hits 99`，工具会**如实返回无解**并告诉你当前菜单只命中几个梗，
-而不是一路降到 1 个、假装满足了要求。这条有回归断言锁住。
-
-### 6. 不承诺任何运势
-
-所有谐音与吉祥话是文案玩法，**不是效果保证**。输出尾部固定打印该声明。
-
-### 7. 能力边界
-
-- 营养表是「常见餐品」而非全量菜单，不含区域限定品与套餐组合
-- 配出的餐单**不保证当前门店在售**——这也是停在品名级的原因之一
-- `--anchors` 报告未命中锚点时，应先修词库而不是让引擎模糊匹配
+定位是「均衡搭配 + 谐音玩法」，不含减重承诺与节食方案。
 
 ---
 
-## 八、项目结构
+## 项目结构
 
 ```
 mcd-lucky-plate/
@@ -386,73 +291,90 @@ mcd-lucky-plate/
 ├── README.md                   本文件
 ├── MCP_INTEGRATION.md          MCP 集成与下单链路契约
 ├── skill-dependencies.json     能力声明与降级策略
-├── mcp-config.example.json     脱敏 MCP 配置示例
-├── CONTEST_DECLARATION.md      参赛声明（官方原文）
-├── workbuddy.md                开发对话上下文
-├── requirements.txt            零第三方依赖说明
-├── .gitignore                  拦截凭证
+├── CONTRIBUTING.md             贡献指南
 ├── src/
 │   ├── lucky_plate.py          CLI 入口
 │   ├── menu_luck.py            餐品幸运清单（154 项 × 215 条寓意）
-│   ├── lucky.py                8 主题 + 50 条谐音词库 + provenance
+│   ├── lucky.py                8 主题 + 50 条谐音词库 + 溯源
 │   ├── lucky_engine.py         锚点检索 / 主题感知配平 / 差异化验证
-│   ├── nutrition.py             营养取数与字段归一化
+│   ├── nutrition.py            营养取数与字段归一化
 │   ├── composer.py             单餐组合穷举与打分
-│   ├── textfmt.py               终端显示宽度对齐
-│   └── mcp_client.py            极简 streamable HTTP MCP 客户端
+│   └── mcp_client.py           极简 streamable HTTP MCP 客户端（零依赖）
 ├── scripts/
-│   ├── export_menu_luck.py      生成餐品幸运清单文档与 CSV
-│   ├── calibrate_jackpot.py     jackpot 约束校准探针
-│   ├── calibrate_travel.py      travel 约束校准探针
-│   └── check_environment.py     环境就绪检查
+│   ├── check_environment.py    环境就绪检查（四态路由）
+│   ├── export_menu_luck.py     生成清单文档与 CSV
+│   ├── calibrate_jackpot.py    约束校准探针
+│   └── calibrate_travel.py     约束校准探针
+├── docs/
+│   ├── 餐品幸运清单.md          154 项餐品的幸运寓意清单
+│   ├── 餐品幸运清单.csv         逐条寓意（Excel 双击不乱码）
+│   ├── make_figs.py            配图生成（零依赖 SVG + Chrome 截 PNG）
+│   ├── sanitize_sample.py      样本入库前脱敏
+│   └── figs/                   README 配图
 ├── references/
-│   ├── setup-guide.md           Token 获取与配置指引
-│   └── ordering-playbook.md     下单链路参数速查
+│   ├── setup-guide.md          Token 获取与配置指引
+│   └── ordering-playbook.md    下单链路参数速查
 ├── tests/
-│   ├── test_lucky.py            2081 项断言
-│   └── fixtures/
-│       └── synthetic_nutrition.json   合成夹具
-├── samples/
-│   └── nutrition-foods.raw.json 真实 MCP 响应快照（已脱敏公开）
-└── docs/
-    ├── 餐品幸运清单.md          154 项餐品的幸运寓意清单
-    └── 餐品幸运清单.csv         逐条寓意（utf-8-sig，Excel 直开）
+│   └── test_lucky.py           2081 项断言，离线可跑
+└── samples/
+    └── nutrition-foods.raw.json 真实 MCP 响应快照（已脱敏公开）
 ```
 
+代码约 4300 行，**零第三方依赖**（仅 Python 标准库）。
+
 ---
 
-## 九、目标用户
+## 可验证性
 
-| 用户 | 具体场景 |
+```bash
+python tests/test_lucky.py     # 2081 项断言，离线，无需 Token 与网络
+```
+
+| 主张 | 怎么证 |
 |---|---|
-| 想给一顿饭配彩头的人 | 考试前、面试前、抽奖前、搬家前——需要一个不像玩笑的理由 |
-| 记不住菜单又想凑梗的人 | 「麦满分」到底是麦满分还是麦满分 foods，跑一次 `--anchors` 就知道 |
-| 拿谐音文案做创意的人 | 词库带 `kind` 与 `note`，可审计、可复用、可改后复跑 |
-| 麦当劳 MCP 接入者 | `lucky_engine.py` 示范「主观内容 + 硬约束」如何落到可复现求解上 |
+| 谐音不是编的 | 50 条锚点逐条核验在真实菜单中命中 |
+| 主题差异是真的 | 8 个主题产出 8 种不同首选（`--compare`） |
+| 清单覆盖完整 | 154/154 餐品全覆盖，无「无解」项 |
+| 约束没被偷偷违背 | 逐主题逐方案校验热量容差、钠上限、甜品开关 |
+| 谐音命中数真实 | `luck_score` 与实数命中数一致性断言 |
+| 没有随机性 | 同输入两次运行 md5 一致；打乱菜单顺序输出不变 |
+| 妥协被如实报告 | 显式下限不可达时必须返回无解（有断言） |
 
-**不适合**：把它当减重方案或临床营养处方；把它当运势预测工具；
-期待它替你下单（它不产生订单）。
-
----
-
-## 十、待办与已知缺口
-
-- [ ] **未接门店维度在售校验**（`query-meals` 需 `storeCode`，会引入地理位置依赖）。
-      当前刻意不接，代价是餐单不保证在售——这条已写进输出而非藏起来
-- [ ] 词库目前 50 条锚点，尚未覆盖「特定门店限定品」与区域菜单
-- [ ] 未建模用户口味偏好（忌口、辣/不辣），当前只按主题叙事与营养求解
-- [ ] 未出图文报告（可参考兄弟项目 `mcd-weekly-plate` 的 `render.py` 零依赖 HTML 方案）
-- [x] ~~谐音锚点可能对不上真实菜单~~ —— 已于 2026-10-09 全部核验，50/50 命中。
-      开发过程中确实抓到 3 个失效锚点（鲈/扭蛋/开心），已修正为真实在售品
+样本缺失时测试不会崩溃：自动改用合成夹具，把依赖真实菜单的断言显式标记为
+**跳过**，不伪装成通过。
 
 ---
 
-## 十一、合规声明
+## 数据来源与合规
 
-本项目为麦当劳程序员节创意开发大赛参赛作品，由参赛者独立开发，**非麦当劳官方产品**。
-输出仅供参考，不构成医疗、营养或其他专业建议；餐品信息、价格及供应状态以麦当劳
-官方渠道的实时结果为准。谐音与吉祥话仅为文案玩法，**不构成任何运势或效果承诺**。
-完整声明见 [`CONTEST_DECLARATION.md`](./CONTEST_DECLARATION.md)。
+唯一数据源是麦当劳 MCP 的 `list-nutrition-foods`：35 个工具里仅有的
+「零必填参数 + 纯只读 + 不依赖门店与登录态」工具之一。
 
-本项目**不产生真实订单、不占用券与积分资产**，下单链路需由用户本人确认后执行。
-仓库内不含任何真实 Token、密钥或个人信息，配置示例仅使用环境变量占位符。
+这条边界是刻意选的：**任何人 clone 后配自己的 Token 就能完整复现**，
+不需要人在特定城市、不需要账户里有券有积分有订单。
+
+仓库内**不含任何真实 Token、密钥或个人信息**。样本入库前经
+`docs/sanitize_sample.py` 递归检查禁止字段并脱敏会话追踪标识；
+`.gitignore` 拦截 `.env` / `*token*` / `*secret*` / `mcp-config.json`。
+
+---
+
+## 参与项目
+
+麦当劳程序员创意开发大赛（M-CODE）参赛作品，**由参赛者独立开发，非麦当劳官方产品**。
+
+- 输出仅供参考，不构成医疗、营养或其他专业建议
+- 餐品信息、价格及供应状态以麦当劳官方渠道实时结果为准
+- 谐音与吉祥话仅为文案玩法，不构成任何运势或效果承诺
+- 本项目**不产生真实订单、不占用券与积分资产**
+
+完整声明见 [`CONTEST_DECLARATION.md`](CONTEST_DECLARATION.md)。
+
+## 致谢
+
+数据来自[麦当劳 MCP](https://open.mcd.cn/mcp) 开放平台。
+本项目仅使用其只读营养查询能力，不接入任何下单、领券、抽奖等写操作工具。
+
+## 许可
+
+代码以 MIT 许可开放。赛事声明与商标归属见 [`CONTEST_DECLARATION.md`](CONTEST_DECLARATION.md)。
