@@ -4,7 +4,11 @@
 不写入任何文件）。若取不到则退出，不做任何降级猜测。
 
 用法：
-    python scripts/post_issue.py --title "标题" --body-file docs/xxx.md
+    # 自己的仓库
+    python scripts/post_issue.py --title "标题" --body-file body.md
+    # 活动仓库（报名参赛）
+    python scripts/post_issue.py --repo M-China/mcd-developer-innovation-challenge \
+        --title "标题" --body-file body.md
 """
 from __future__ import annotations
 
@@ -15,8 +19,7 @@ import sys
 import urllib.error
 import urllib.request
 
-REPO = "imgww/mcd-lucky-plate"
-API = f"https://api.github.com/repos/{REPO}/issues"
+DEFAULT_REPO = "imgww/mcd-lucky-plate"
 
 
 def get_cred() -> tuple[str, str] | None:
@@ -44,6 +47,8 @@ def main() -> int:
     ap.add_argument("--title", required=True)
     ap.add_argument("--body-file", required=True)
     ap.add_argument("--labels", default="")
+    ap.add_argument("--repo", default=DEFAULT_REPO,
+                    help=f"目标仓库，默认 {DEFAULT_REPO}")
     args = ap.parse_args()
 
     cred = get_cred()
@@ -61,8 +66,9 @@ def main() -> int:
         "body": body,
         "labels": [x.strip() for x in args.labels.split(",") if x.strip()],
     }
+    api = f"https://api.github.com/repos/{args.repo}/issues"
     req = urllib.request.Request(
-        API, data=json.dumps(payload).encode("utf-8"), method="POST",
+        api, data=json.dumps(payload).encode("utf-8"), method="POST",
         headers={
             "Authorization": f"Bearer {token}",
             "Accept": "application/vnd.github+json",
