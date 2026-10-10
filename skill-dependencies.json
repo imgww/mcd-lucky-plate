@@ -2,6 +2,7 @@
   "schema_version": "1",
   "capabilities": [
     "lucky_theme_projection",
+    "menu_luck_inventory",
     "homophone_anchor_resolution",
     "nutrition_constraint_solving",
     "single_meal_composition",
@@ -11,6 +12,16 @@
     "offline_sample_replay"
   ],
   "functional_degradations": [
+    {
+      "capability": "menu_luck_inventory",
+      "trigger": "运行时 src/menu_luck.py 缺失、被裁剪，或清单条目与当前菜单不一致（新增品名未收录）",
+      "fallback": "餐品幸运清单与 --menu-luck 命令不可用；主题配餐与 --anchors 核验仍照常工作，因二者只依赖 list-nutrition-foods 与 src/lucky.py",
+      "user_input": "明确告知清单功能不可用及原因，不静默假装已收录",
+      "limitations": "无法回答「这道菜有什么寓意」「什么菜有大吉大利」这类查询；主题求解结果不受影响",
+      "evidence_label": "已验证",
+      "recovery": "从备份恢复 src/menu_luck.py 后重跑 python scripts/export_menu_luck.py 重建清单",
+      "stop_condition": "清单与菜单差异超过 20% 时输出未收录明细并停止导出，不覆盖已有清单文件"
+    },
     {
       "capability": "homophone_anchor_resolution",
       "trigger": "主题的某个谐音锚点在真实菜单中无匹配餐品（如词库写了「扭蛋」但菜单没有该品名）",
@@ -295,6 +306,16 @@
           "evidence_label": "已验证",
           "recovery": "配置 Token 后在 MCP 客户端中执行链路",
           "stop_condition": "无"
+        },
+        {
+          "capability": "single_meal_composition",
+          "trigger": "MCD_MCP_TOKEN 未设置、认证失效或 mcp.mcd.cn 不可达",
+          "fallback": "改用 samples/nutrition-foods.raw.json 完成组合求解，算法、约束与打分完全一致",
+          "user_input": "提示当前为离线数据并继续执行",
+          "limitations": "营养数据为实测快照，菜单可能已更新；不反映实时在售状态与价格",
+          "evidence_label": "已验证",
+          "recovery": "按 references/setup-guide.md 配置 MCD_MCP_TOKEN 后重跑在线模式",
+          "stop_condition": "样本也缺失时以退出码 3 停止，不生成假方案"
         }
       ]
     },
@@ -373,6 +394,26 @@
           "evidence_label": "已验证",
           "recovery": "补齐样本或配置 Token",
           "stop_condition": "两者都不可用时停止，不编造锚点命中结果"
+        },
+        {
+          "capability": "nutrition_constraint_solving",
+          "trigger": "真实样本缺失且未配置 Token",
+          "fallback": "使用 tests/fixtures/ 合成夹具完成约束求解",
+          "user_input": "明确标注数据来源为合成夹具",
+          "limitations": "夹具餐品为人为构造，钠与热量数值不代表真实菜单，结论不可外推",
+          "evidence_label": "已验证",
+          "recovery": "补齐真实样本或配置 MCD_MCP_TOKEN 后复跑",
+          "stop_condition": "两者都不可用时停止，不编造求解结果"
+        },
+        {
+          "capability": "single_meal_composition",
+          "trigger": "真实样本缺失且未配置 Token",
+          "fallback": "使用合成夹具完成组合枚举与打分",
+          "user_input": "明确标注数据来源为合成夹具",
+          "limitations": "夹具餐品为人为构造，组合结果仅在该夹具下成立",
+          "evidence_label": "已验证",
+          "recovery": "补齐真实样本或配置 MCD_MCP_TOKEN 后复跑",
+          "stop_condition": "两者都不可用时停止，不生成假方案"
         }
       ]
     }
